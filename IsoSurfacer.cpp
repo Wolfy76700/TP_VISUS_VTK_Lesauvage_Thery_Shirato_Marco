@@ -52,7 +52,6 @@ int IsoSurfacer::ComputePartialIntersection(const int &tetId){
 	vector<pair <vtkIdType,vtkIdType> >  tetEdges; 
 
 	//compute neighbors of tetId and store them in the neighbors variable
-	vector<vtkIdType>& neighbors = TetNeighbors->at(tetId);
 	...;
 	
 
