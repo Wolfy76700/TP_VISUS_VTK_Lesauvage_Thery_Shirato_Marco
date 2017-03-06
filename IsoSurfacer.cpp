@@ -135,7 +135,7 @@ int IsoSurfacer::ComputeSimpleIntersection(vtkCell *tet){
 
 
 	}
-
+	ReOrderTetEdges(tetEdges);
 
 	//for each edge of tetEdges, compute edge intersection and add the new vertex in the createdPts list
 	for (int i = 0; i < tetEdges.size() ; i++)
