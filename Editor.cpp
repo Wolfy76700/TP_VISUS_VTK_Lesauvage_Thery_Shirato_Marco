@@ -120,6 +120,10 @@ IsoSurfacer* Editor::extractIsoSurface(const double &isoValue){
 	DebugTimer t;
 	//QUESTION 6
 	IsoSurfacer* isosurface = IsoSurfacer::New();
+	//QUESTION 13
+	/*
+	isosurface->IsoSurfacer::SetType();
+	*/
 	//set input data and isovalue 
 
 
