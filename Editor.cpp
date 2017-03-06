@@ -189,18 +189,13 @@ int Editor::loadInputMesh (const string &fileName){
   cout << "[Editor]   done! (read " << inputMesh_->GetNumberOfCells()
     << " cells)" << endl;
   
-  //QUESTION 14
-  //tetNeighbors_ initialisation
-  
- 
-
-  /*
-  for (int i = 0; i < inputMesh_->vtkUnstructuredGrid::; i++) {
-	  tetNeighbors_.push_back(inputMesh_->vtkUnstructuredGrid::GetCellNeighbors());
-	  inputMesh_->vtkUnstructuredGrid::GetCellNeighbors(tetNeighbors_.i,);
-  }
-  */
-//ne fonctionne pas
+	//QUESTION 14
+	//tetNeighbors_ initialisation
+	/*
+	for (int i = 0; i < inputMesh_->GetNumberOfCells(); i++) {
+	inputMesh_->vtkUnstructuredGrid::GetCellNeighbors(tetNeighbors_.(,i),,tetIndex_);
+	*/
+	//ne fonctionne pas
 
   //QUESTION 20
   //tetIndex_ initialisation (interval table)
