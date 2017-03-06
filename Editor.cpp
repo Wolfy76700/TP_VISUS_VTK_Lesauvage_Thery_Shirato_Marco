@@ -1,248 +1,278 @@
 /*
-  Editor.cpp: Data-structures and processing.
-  Copyright (C) 2013  Julien Tierny <tierny@telecom-paristech.fr>
+IsoSurfacer.cpp: Isosurface computation class.
+Copyright (C) 2013  Julien Tierny <tierny@telecom-paristech.fr>
 
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
 
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
 
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-    File modified by T. Vigier (January 2015)
+  File modified by T. Vigier (January 2015)
 */
 
 
-#include  "Editor.h"
+#include  "IsoSurfacer.h"
 
-Editor::Editor(){
+vtkStandardNewMacro(IsoSurfacer);
 
-  inputMesh_ = NULL;
-  meshReader_ = NULL;
-  type_ = SIMPLE;
+IsoSurfacer::IsoSurfacer(){
+	Input = NULL;
+	Output = NULL;
+	pointSet_ = NULL;
+	cellArray_ = NULL;
+	fakeScalars_ = NULL;
+	Type = SIMPLE;
 }
 
-Editor::Editor(const Editor& other){
+IsoSurfacer::~IsoSurfacer(){
 
+	if(Output)
+		Output->Delete();
+	if(pointSet_)
+		pointSet_->Delete();
+	if(cellArray_)
+		cellArray_->Delete();
+	if(fakeScalars_)
+		fakeScalars_->Delete();
 }
 
-Editor::~Editor(){
+int IsoSurfacer::ComputePartialIntersection(const int &tetId){
+	//QUESTION 16
+	/*
+	vtkIdList * createdPts = vtkIdList::New();
+	vector<pair <vtkIdType,vtkIdType> >  tetEdges; 
 
-#ifndef _WIN32
-  if(meshReader_) meshReader_->Delete();
+	//compute neighbors of tetId and store them in the neighbors variable
+	vector<vtkIdType>& neighbors = TetNeighbors->at(tetId);
+	...;
+	
 
-  for(unsigned int i = 0; i < vtkIsoSurfacers_.size(); i++){
-    if(vtkIsoSurfacers_[i])
-      vtkIsoSurfacers_[i]->Delete();
-  }
+	//as in ComputeSimpleIntersection, store the edges intersected by the level set in tetEdges
+	tetEdges.push_back(TetNeighbors);// pas sûr
 
-  for(unsigned int i = 0; i < isoSurfacers_.size(); i++){
-    if(isoSurfacers_[i])
-      isoSurfacers_[i]->Delete();
-  }
-#endif
+	
+	//re-order the edges
+	...;
+
+
+	for (int i = 0; i < tetEdges.size() ; i++)
+	{
+		//edge i
+		bool computedIntersection = false; //computedIntersection is true if the intersection of this edge has been already computed
+
+		//looping on the neighbors of tetId to see whether the edge intersection has already been computed 
+		int j = 0;
+		while (j < voisins.size() && !deja_traite)
+		{
+			//only neighboors intersected with the level-set and with an id inferior to tetId are good candidates 
+			if (... && voisins.Id < tetId)
+			{
+					// for each good candidate, we compare his already computed intersected edges to the current edge i
+					int k = 0;
+					while (k < edgesIntersected[voisins[j]].size() && !deja_traite)
+					{
+						EdgeIntersection* edgeintersection = edgesIntersected[voisins[j]][k];
+						//if the edge vertex ids are the same
+						if ( ...)
+						{
+							//the intersection is already computed
+							computedIntersection = true;
+							.....;
+						}
+						k++;
+					}	
+			}
+			j++;
+		}
+
+		//if intersection not already computed
+		if (!deja_traite)
+		{
+			//computation of the intersection
+			....;
+
+
+			//creation of a new EdgeIntersection and storing it in edgesIntersected
+			...;
+		}	
+	}
+
+	//insert the created ids in the output surface
+	...;
+
+
+	createdPts->Delete();
+	*/
+	return 0;
 }
 
-Editor& Editor::operator=(const Editor& other){
-  return *this;
+int IsoSurfacer::ComputeSimpleIntersection(vtkCell *tet){
+	//QUESTION 9
+	/*
+	vtkIdList* createdPts = vtkIdList::New();
+	vector< pair<vtkIdType,vtkIdType> >  tetEdges; 
+
+	//In tetEdges, store the edges intersected by the level set
+	for (int i = 0; i < tet->GetNumberOfEdges() ; i++)
+	{
+		
+
+
+	}
+
+
+	//for each edge of tetEdges, compute edge intersection and add the new vertex in the createdPts list
+	for (int i = 0; i < tetEdges.size() ; i++)
+	{
+
+
+
+	}
+
+
+
+	//insert the created ids in the output surface
+	
+
+
+	createdPts->Delete();
+
+	*/
+
+	return 0;
 }
 
-bool Editor::operator==(const Editor& other) const{
-
-  ///TODO: return ...;
-  return false;
+int IsoSurfacer::FastExtraction(){
+	//QUESTION 22
+	return 0;
 }
 
-int Editor::addIsoSurface(const double &isoValue, const bool &useVtk){
+int IsoSurfacer::ReOrderTetEdges(vector<pair<vtkIdType, vtkIdType> > &edgeList) const{
+	int size = edgeList.size();
 
-  if(useVtk){
-    vtkContourGrid *isoSurfacer = extractIsoSurfaceVTK(isoValue);
-    if(isoSurfacer){
-      isoSurfaceList_.push_back(isoSurfacer->GetOutput());
-      vtkIsoSurfacers_.push_back(isoSurfacer);
-      isoSurfacers_.push_back(NULL);
-    }
-  }
-  else{
-    IsoSurfacer *isoSurfacer = extractIsoSurface(isoValue);
+	pair<vtkIdType, vtkIdType> temp = edgeList[0];
+	for (int i = 1; i < size-1; i++)
+	{
+		if (edgeList[i].first == temp.first || edgeList[i].second == temp.first || edgeList[i].first == temp.second || edgeList[i].second == temp.second)
+		{
+			temp = edgeList[i];
+		} else 
+		{
+			temp = edgeList[i+1];
+			edgeList[i+1] = edgeList[i];
+			edgeList[i] = temp;
+			break;
+		}
+	}
 
-    if(isoSurfacer){
-      isoSurfaceList_.push_back(isoSurfacer->GetOutput());
-      isoSurfacers_.push_back(isoSurfacer);
-      vtkIsoSurfacers_.push_back(NULL);
-    }
-  }
+	temp = edgeList[size-1];
+	for (int i = size-2; i > 0; i--)
+	{
+		if (edgeList[i].first == temp.first || edgeList[i].second == temp.first || edgeList[i].first == temp.second || edgeList[i].second == temp.second)
+		{
+			temp = edgeList[i];
+		} else 
+		{
+			temp = edgeList[i-1];
+			edgeList[i-1] = edgeList[i];
+			edgeList[i] = temp;
+			break;
+		}
+	}
 
-  isoValueList_.push_back(isoValue);
-
-  return isoSurfaceList_.size() - 1;
+	return 0;
 }
 
-int Editor::deleteIsoSurface(const int &isoSurfaceId){
+int IsoSurfacer::SimpleExtraction(){
+	//QUESTION 10
+	//loop on all the tetrahedrons of the mesh
 
-  if((isoSurfaceId < 0)||(isoSurfaceId >= (int) isoSurfaceList_.size()))
-    return -1;
+	// if the tetrahedron is on the level set, compute the intersection 
 
-  isoValueList_.erase(isoValueList_.begin() + isoSurfaceId);
-  isoSurfaceList_.erase(isoSurfaceList_.begin() + isoSurfaceId);
-
-  if(vtkIsoSurfacers_[isoSurfaceId]){
-    // vtk was used
-    vtkIsoSurfacers_[isoSurfaceId]->Delete();
-    vtkIsoSurfacers_.erase(vtkIsoSurfacers_.begin() + isoSurfaceId);
-    isoSurfacers_.erase(isoSurfacers_.begin() + isoSurfaceId);
-  }
-  else{
-    isoSurfacers_[isoSurfaceId]->Delete();
-    isoSurfacers_.erase(isoSurfacers_.begin() + isoSurfaceId);
-    vtkIsoSurfacers_.erase(vtkIsoSurfacers_.begin() + isoSurfaceId);
-  }
-
-  cout << "[Editor] Isosurface #" << isoSurfaceId << " deleted." << endl;
-
-  if(!isoSurfaceList_.size())
-    return -1;
-
-  if(isoSurfaceId >= (int) isoSurfaceList_.size())
-    return isoSurfaceList_.size() - 1;
-
-  return -1;
+	return 0;
 }
 
-IsoSurfacer* Editor::extractIsoSurface(const double &isoValue){
-	DebugTimer t;
-	//QUESTION 6
-	IsoSurfacer* isosurface = IsoSurfacer::New();
-	isosurface->IsoSurfacer::SetInput(inputMesh_);
-	isosurface->IsoSurfacer::SetValue(isoValue);
-	//QUESTION 13
-	isosurface->IsoSurfacer::SetType(Editor::type_);
-	//set input data and isovalue 
-
-
-	//QUESTION 15:set neighbors
-	isosurface->SetTetNeighbors(&tetNeighbors_);//rajouté sans les questions précédentes fonctionnelles
-
-	//QUESTION 21: set index
-
-
-	//update call
-
-	cout << "[Editor] Isosurface extracted in " << t.getElapsedTime()
-		<< " s." <<  endl;
-
-	return isosurface;
+int IsoSurfacer::StandardExtraction(){
+	//QUESTION 17
+	/*
+	IsoSurfacer::ComputePartialIntersection();// à remplir
+	*/
+	return 0;
 }
 
-vtkContourGrid* Editor::extractIsoSurfaceVTK(const double &isoValue){
-  DebugTimer t;
+void IsoSurfacer::Update(){
 
-  //QUESTION 4
-  vtkContourGrid* isosurface = vtkContourGrid::New();
-  //set input data and isovalue
-  isosurface->vtkContourGrid::SetInputData(inputMesh_);
-  isosurface->vtkContourGrid::SetValue(0,isoValue);
-
-  //update call
-  isosurface->Update();
-
-  cout << "[Editor] Isosurface extracted in " << t.getElapsedTime()
-    << " s." << endl;
-
-  return isosurface;
-}
-
-vtkPolyData* Editor::getIsoSurface(const int &isoSurfaceId) const{
-
-  if((isoSurfaceId < 0)||(isoSurfaceId >= (int) isoSurfaceList_.size()))
-    return NULL;
-
-  return isoSurfaceList_[isoSurfaceId];
-}
-
-int Editor::loadInputMesh (const string &fileName){
-
-  meshReader_ = vtkXMLUnstructuredGridReader::New();
-
-  meshReader_->SetFileName(fileName.data());
-
-  cout << "[Editor] Reading input mesh..." << endl;
-
-  meshReader_->Update();
-
-  inputMesh_ = meshReader_->GetOutput();
-
-  // force the usage of the first array as scalar data
-  inputMesh_->GetPointData()->SetScalars(
-    inputMesh_->GetPointData()->GetArray(0));
-
-  inputMesh_->BuildLinks();
-
-  cout << "[Editor]   done! (read " << inputMesh_->GetNumberOfCells()
-    << " cells)" << endl;
-  
-  //QUESTION 14
-  //tetNeighbors_ initialisation
-/*
-  for (int i = 0; i < sizeof(inputMesh_); i++) {
-	  tetNeighbors_.push_back(inputMesh_->vtkUnstructuredGrid::GetCellNeighbors( à remplir ));
-
-  }
-*/
-//ne fonctionne pas
-
-  //QUESTION 20
-  //tetIndex_ initialisation (interval table)
+	if(!Input){
+		cerr << "[IsoSurfacer] No input defined..." << endl;
+		return;
+	}
 
 
+	if(pointSet_)
+		pointSet_->Delete();
+	pointSet_ = vtkPoints::New();
 
-  return 0;
-}
 
-int Editor::moveIsoSurface(const int& isoSurfaceId, const double &shift,
-  const bool &useVtk){
+	if(cellArray_)
+		cellArray_->Delete();
+	cellArray_ = vtkCellArray::New();
 
-  if((isoSurfaceId < 0)||(isoSurfaceId >= (int) isoSurfaceList_.size()))
-    return -1;
+	if(Output)
+		Output->Delete();
 
-  double newIsoValue = isoValueList_[isoSurfaceId] + shift;
+	if(!fakeScalars_)
+		fakeScalars_ = vtkDoubleArray::New();
 
-  cout << "[Editor] Moving isosurface #" << isoSurfaceId
-    << " to " << newIsoValue << "..." << endl;
+	Output = vtkPolyData::New();
+	Output->SetPoints(pointSet_);
+	Output->SetPolys(cellArray_);
+	Output->GetPointData()->SetScalars(fakeScalars_);
 
-  // delete the previous computation
-  if(isoSurfacers_[isoSurfaceId]){
-    isoSurfacers_[isoSurfaceId]->Delete();
-    isoSurfacers_[isoSurfaceId] = NULL;
-  }
-  if(vtkIsoSurfacers_[isoSurfaceId]){
-    vtkIsoSurfacers_[isoSurfaceId]->Delete();
-    vtkIsoSurfacers_[isoSurfaceId] = NULL;
-  }
+	scalarField_ = Input->GetPointData()->GetScalars();
 
-  // now update
-  if(useVtk){
-    vtkContourGrid *isoSurfacer = extractIsoSurfaceVTK(newIsoValue);
+	DebugMemory memory;
+	DebugTimer  timer;
 
-    isoSurfaceList_[isoSurfaceId] = isoSurfacer->GetOutput();
-    vtkIsoSurfacers_[isoSurfaceId] = isoSurfacer;
-  }
-  else{
-    IsoSurfacer *isoSurfacer = extractIsoSurface(newIsoValue);
+	switch(Type){
 
-    isoSurfaceList_[isoSurfaceId] = isoSurfacer->GetOutput();
-    isoSurfacers_[isoSurfaceId] = isoSurfacer;
-  }
+	case SIMPLE:
+		cout << "[IsoSurfacer] Using simple implementation..." << endl;
+		SimpleExtraction();
+		break;
 
-  isoValueList_[isoSurfaceId] = newIsoValue;
+	case STANDARD:
+		cout << "[IsoSurfacer] Using standard implementation..." << endl;
+		StandardExtraction();
+		break;
 
-  return 0;
+	case FAST:
+		cout << "[IsoSurfacer] Using fast implementation..." << endl;
+		FastExtraction();
+		break;
+	}
+
+	cout << setprecision(4);
+
+	cout << "[IsoSurfacer] IsoSurface extracted ("
+		<< Output->GetNumberOfPoints() << " vertices, "
+		<< Output->GetNumberOfCells() << " faces)." << endl;
+	cout << "[IsoSurfacer] Extraction performed in "
+		<< timer.getElapsedTime() << " s. (memory usage: "
+		<< memory.getInstantUsage() << " MB)." << endl;
+
+	// add a scalar value to the isosurface to make sure it gets colored by the
+	// rest of the pipeline
+	fakeScalars_->SetNumberOfTuples(Output->GetNumberOfPoints());
+	for(int i = 0; i < Output->GetNumberOfPoints(); i++)
+		fakeScalars_->SetComponent(i, 0, Value);
 }
 
