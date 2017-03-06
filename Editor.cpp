@@ -121,9 +121,7 @@ IsoSurfacer* Editor::extractIsoSurface(const double &isoValue){
 	//QUESTION 6
 	IsoSurfacer* isosurface = IsoSurfacer::New();
 	//QUESTION 13
-	/*
-	isosurface->IsoSurfacer::SetType();
-	*/
+	isosurface->IsoSurfacer::SetType(Editor::type_);
 	//set input data and isovalue 
 
 
