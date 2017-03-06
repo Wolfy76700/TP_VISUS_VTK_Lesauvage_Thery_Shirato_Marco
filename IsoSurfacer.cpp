@@ -53,15 +53,15 @@ int IsoSurfacer::ComputePartialIntersection(const int &tetId){
 
 	//compute neighbors of tetId and store them in the neighbors variable
 	vector<vtkIdType>& neighbors = TetNeighbors->at(tetId);
-	...
-
+	...;
+	
 
 	//as in ComputeSimpleIntersection, store the edges intersected by the level set in tetEdges
-	...
+	tetEdges.push_back(TetNeighbors);// pas sûr
 
 	
 	//re-order the edges
-	...
+	...;
 
 
 	for (int i = 0; i < tetEdges.size() ; i++)
@@ -74,7 +74,7 @@ int IsoSurfacer::ComputePartialIntersection(const int &tetId){
 		while (j < voisins.size() && !deja_traite)
 		{
 			//only neighboors intersected with the level-set and with an id inferior to tetId are good candidates 
-			if (...)
+			if (... && voisins.Id < tetId)
 			{
 					// for each good candidate, we compare his already computed intersected edges to the current edge i
 					int k = 0;
@@ -86,7 +86,7 @@ int IsoSurfacer::ComputePartialIntersection(const int &tetId){
 						{
 							//the intersection is already computed
 							computedIntersection = true;
-							.....
+							.....;
 						}
 						k++;
 					}	
@@ -98,20 +98,20 @@ int IsoSurfacer::ComputePartialIntersection(const int &tetId){
 		if (!deja_traite)
 		{
 			//computation of the intersection
-			....
+			....;
 
 
 			//creation of a new EdgeIntersection and storing it in edgesIntersected
-			...
+			...;
 		}	
 	}
 
 	//insert the created ids in the output surface
-	...
+	...;
 
 
-	createdPts->Delete();*/
-
+	createdPts->Delete();
+	*/
 	return 0;
 }
 
@@ -203,8 +203,9 @@ int IsoSurfacer::SimpleExtraction(){
 
 int IsoSurfacer::StandardExtraction(){
 	//QUESTION 17
-
-
+	/*
+	IsoSurfacer::ComputePartialIntersection();// à remplir
+	*/
 	return 0;
 }
 
