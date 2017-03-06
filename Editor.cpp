@@ -123,10 +123,12 @@ IsoSurfacer* Editor::extractIsoSurface(const double &isoValue){
 	//set input data and isovalue 
 	isosurface->SetInput(inputMesh_);
 	isosurface->SetValue(isoValue);
-
+	//QUESTION 13
+	isosurface->IsoSurfacer::SetType(Editor::type_);
 
 	//QUESTION 15:set neighbors
-		
+	isosurface->SetTetNeighbors(&tetNeighbors_);//rajouté sans les questions précédentes fonctionnelles
+
 
 	//QUESTION 21: set index
 
@@ -190,8 +192,15 @@ int Editor::loadInputMesh (const string &fileName){
   //QUESTION 14
   //tetNeighbors_ initialisation
   
+ 
 
-
+  /*
+  for (int i = 0; i < inputMesh_->vtkUnstructuredGrid::; i++) {
+	  tetNeighbors_.push_back(inputMesh_->vtkUnstructuredGrid::GetCellNeighbors());
+	  inputMesh_->vtkUnstructuredGrid::GetCellNeighbors(tetNeighbors_.i,);
+  }
+  */
+//ne fonctionne pas
 
   //QUESTION 20
   //tetIndex_ initialisation (interval table)
