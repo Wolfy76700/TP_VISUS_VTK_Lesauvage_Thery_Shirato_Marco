@@ -133,17 +133,55 @@ class VTK_EXPORT IsoSurfacer : public vtkAlgorithm {
     
     inline vector<double> ComputeEdgeIntersection(const pair<vtkIdType, vtkIdType> &edge) const{
     //QUESTION 8
-      vector<double> p(3); //new point
-	  
+      
+	vector<double> pv(3); 
+	  double p1[3]; //new point
+	  double p2[3]; //new point
+	  double p[3]; 
+
+	  double ratio;
+
+		vtkIdType id1 = edge.first;
+		vtkIdType id2 = edge.second;
 	  //Get value of edge ends 
-
-
+	  double value1 = Input->GetPointData()->GetScalars()->GetComponent(id1, 0);
+	  double value2 = Input->GetPointData()->GetScalars()->GetComponent(id2, 0);
 	  //Get coordinates of edge ends
-
+	  Input->GetPoint(id1, p1);
+	  Input->GetPoint(id2, p2);
 
 	  //Compute the coordinate of the intersection 
-      
-      return p;
+	  ratio = (Value - min(value1, value2)) / (abs(value2 - value1)); //interpolation
+
+	  if (value1 < value2)
+	  {
+		  pv[0] = p2[0] - p1[0];
+		  pv[1] = p2[1] - p1[1];
+		  pv[2] = p2[2] - p1[2];
+
+		  p[0] = p1[0] + ratio*pv[0];
+		  p[1] = p1[1] + ratio*pv[1];
+		  p[2] = p1[2] + ratio*pv[2];
+
+	  }
+	  else 
+	  {
+		  pv[0] = p1[0] - p2[0];
+		  pv[1] = p1[1] - p2[1];
+		  pv[2] = p1[2] - p2[2];
+
+		  p[0] = p2[0] + ratio*pv[0];
+		  p[1] = p2[1] + ratio*pv[1];
+		  p[2] = p2[2] + ratio*pv[2];
+
+
+	  }
+	  vector<double> sortie;
+	  p_sortie.push_back(p[0]);
+	  p_sortie.push_back(p[1]);
+	  p_sortie.push_back(p[2]);
+
+      return p_sortie;
     };
     
     int ComputePartialIntersection(const int &tetId);
