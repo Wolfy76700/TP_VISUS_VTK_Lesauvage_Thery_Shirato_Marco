@@ -124,7 +124,7 @@ IsoSurfacer* Editor::extractIsoSurface(const double &isoValue){
 
 
 	//QUESTION 15:set neighbors
-		
+	isosurface->SetTetNeighbors(&tetNeighbors_);//rajouté sans les questions précédentes fonctionnelles
 
 	//QUESTION 21: set index
 
@@ -143,10 +143,11 @@ vtkContourGrid* Editor::extractIsoSurfaceVTK(const double &isoValue){
   //QUESTION 4
   vtkContourGrid* isosurface = vtkContourGrid::New();
   //set input data and isovalue
-
+  isosurface->vtkContourGrid::SetInputData(inputMesh_);
+  isosurface->vtkContourGrid::SetValue(0,isoValue);
 
   //update call
-  //isosurface->Update();
+  isosurface->Update();
 
   cout << "[Editor] Isosurface extracted in " << t.getElapsedTime()
     << " s." << endl;
@@ -185,9 +186,13 @@ int Editor::loadInputMesh (const string &fileName){
   
   //QUESTION 14
   //tetNeighbors_ initialisation
-  
+/*
+  for (int i = 0; i < sizeof(inputMesh_); i++) {
+	  tetNeighbors_.push_back(inputMesh_->vtkUnstructuredGrid::GetCellNeighbors(/* à remplir */));
 
-
+  }
+*/
+//ne fonctionne pas
 
   //QUESTION 20
   //tetIndex_ initialisation (interval table)
