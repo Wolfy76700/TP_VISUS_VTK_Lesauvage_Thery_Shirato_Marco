@@ -52,12 +52,12 @@ int IsoSurfacer::ComputePartialIntersection(const int &tetId){
 	vector<pair <vtkIdType,vtkIdType> >  tetEdges; 
 
 	//compute neighbors of tetId and store them in the neighbors variable
+	vector<vtkIdType>& neighbors = TetNeighbors->at(tetId);
 	...;
 	
 
 	//as in ComputeSimpleIntersection, store the edges intersected by the level set in tetEdges
-	tetEdges.push_back(TetNeighbors);// pas sûr
-
+	...;
 	
 	//re-order the edges
 	...;
@@ -220,9 +220,7 @@ int IsoSurfacer::SimpleExtraction(){
 
 int IsoSurfacer::StandardExtraction(){
 	//QUESTION 17
-	/*
-	IsoSurfacer::ComputePartialIntersection();// à remplir
-	*/
+	IsoSurfacer::ComputePartialIntersection(0);// pas sûr
 	return 0;
 }
 
