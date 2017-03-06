@@ -188,7 +188,7 @@ int Editor::loadInputMesh (const string &fileName){
   //tetNeighbors_ initialisation
 /*
   for (int i = 0; i < sizeof(inputMesh_); i++) {
-	  tetNeighbors_.push_back(inputMesh_->vtkUnstructuredGrid::GetCellNeighbors(/* à remplir */));
+	  tetNeighbors_.push_back(inputMesh_->vtkUnstructuredGrid::GetCellNeighbors( à remplir ));
 
   }
 */
